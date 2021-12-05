@@ -65,19 +65,21 @@ int main(){
 
         shader.Bind();
         shader.SetUniformMat4f("proj", window.getProjection()); 
-
-        glm::mat4 model;
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-        // model = glm::rotate(model, x * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-        // model = glm::rotate(model, y * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-
-        shader.SetUniformMat4f("model", model);
-        shader.SetUniformMat4f("view", camera.calculateViewMatrix());
         
-        va.Bind();
-        ib.Bind();
-        render.Draw(va, ib, shader);
+        for(int i = 0; i < 2; i++){
+            glm::mat4 model;
+            model = glm::translate(model, glm::vec3(0.0f, i, -2.5f));
+            // model = glm::rotate(model, x * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+            // model = glm::rotate(model, y * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.4f, i*0.4f, 1.0f));
+
+            shader.SetUniformMat4f("model", model);
+            shader.SetUniformMat4f("view", camera.calculateViewMatrix());
+            
+            va.Bind();
+            ib.Bind();
+            render.Draw(va, ib, shader);
+        }
         ib.Unbind();
         va.Unbind();
 
