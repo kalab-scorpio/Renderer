@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "Window.h"
+#include "Texture.h"
 
 #define srcPath "res/shaders/Basic.shader"
 
@@ -20,12 +21,14 @@ int main(){
     window.setContext();
     window.getFrameBuffureSize(&bufferWidth, &bufferHeight);
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
+    Texture wood("res/Textures/IMG_20211205_191816.jpg");
+    Texture road("res/Textures/IMG_20211205_191419.jpg"); 
 
     float vertices[] = {
-        -1.0f, -1.0f, 0.0f,
-        0.0f, -1.0f, 1.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, -1.0f, 1.0f,  0.5f, 0.0f,
+        1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,   0.5f, 1.0f 
     };
     unsigned int indices[]={
         0, 3, 1,
@@ -39,6 +42,7 @@ int main(){
     VertexBuffer vb(vertices, sizeof(vertices));
     VertexBufferLayout layout;
     layout.Push<float>(3);
+    layout.Push<float>(2);
     va.AddBuffer(vb, layout);
     
     Shader shader(srcPath);
@@ -78,7 +82,9 @@ int main(){
         
         va.Bind();
         ib.Bind();
+        wood.Bind();
         render.Draw(va, ib, shader);
+        wood.UnBind();
         ib.Unbind();
         va.Unbind();
 
