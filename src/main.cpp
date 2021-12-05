@@ -93,7 +93,7 @@ int main(){
         
         va.Bind();
         ib.Bind();
-        render.Draw(va, ib, shader, 20);
+        render.Draw(va, ib, shader, 1000000);
         ib.Unbind();
         va.Unbind();
 
