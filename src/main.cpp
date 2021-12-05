@@ -61,7 +61,7 @@ int main(){
 
         window.pollEvents();
         
-        camera.keyControl(window.getkeys(), deltaTime);
+        camera.keyControl(window.getkeys(), window.getMouseScroll(), deltaTime);
         MouseChange change = window.getMouseChange();
         
         camera.mouseControl(change.x, change.y);

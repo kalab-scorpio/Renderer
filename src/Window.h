@@ -19,12 +19,13 @@ private:
     const char* title;
     bool keys[1024];
     int bufferWidth, bufferHeight;
-    float lastx, lasty, xChange, yChange;
+    float lastx=0, lasty=0, xChange=0, yChange=0, scroll=0, lastScroll=0, scrollChange=0;
     bool firstMoved = true;
     static void handlekeys(GLFWwindow* window, int key,int code, int action, int mode);
     static void handleMouse(GLFWwindow* window, double xPos, double yPos);
     static void handleMouseButton(GLFWwindow* window, int button, int action, int mode);
     static void handleResize(GLFWwindow* window, int width, int height);
+    static void handleScroll(GLFWwindow* window, double xoffset, double yoffset);
     void createCallbacks();
 
 public:
@@ -42,5 +43,6 @@ public:
     void Initialise(int majorVersion, int minorVersion);
     //Get buffer size information
     void getFrameBuffureSize(int *bufferWidth, int *bufferHeight);
+    float getMouseScroll();
     ~Window();
 };

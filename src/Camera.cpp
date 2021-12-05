@@ -37,7 +37,7 @@ void Camera::mouseControl(float xChange, float yChange){
     update();
 }
 
-void Camera::keyControl(bool* keys, float deltaTime){
+void Camera::keyControl(bool* keys, float scroll, float deltaTime){
     float speed = moveSpeed * deltaTime;
     if(keys[GLFW_KEY_W])
         position += front * speed;
@@ -47,6 +47,7 @@ void Camera::keyControl(bool* keys, float deltaTime){
         position += right * speed;
     if(keys[GLFW_KEY_A])
         position -= right * speed;
+    position += front * (scroll/2.0f);
 }
 
 glm::mat4 Camera::calculateViewMatrix(){
