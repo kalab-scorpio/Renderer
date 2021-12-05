@@ -59,6 +59,7 @@ int main(){
         
         camera.keyControl(window.getkeys(), deltaTime);
         MouseChange change = window.getMouseChange();
+        
         camera.mouseControl(change.x, change.y);
         
         render.Clear();
