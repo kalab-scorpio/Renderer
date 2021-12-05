@@ -8,7 +8,7 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
     glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, 0);
 }
 
-void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, int primCount)const{
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, int primCount)const{
     shader.Bind();
     va.Bind();
     ib.Bind();
