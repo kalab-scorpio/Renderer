@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Renderer.h"
+#include "Camera.h"
 #include "Window.h"
 
 #define srcPath "res/shaders/Basic.shader"
@@ -8,35 +9,18 @@
 // window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f/180.0f;
+float deltaTime = 0.0f;
+float lastTime = 0.0f;
 
-GLuint uniformModel, uniformProj;
 int bufferWidth, bufferHeight;
 
-bool direction = true;
-float triOffset = 0.0f;
-float triMaxOffset = 0.7f;
-float triIncrement = 0.005f;
-
 int main(){
-    Window window(WIDTH, HEIGHT, "Test", 3, 3);
-    window.getFrameBuffureSize(&bufferWidth, &bufferHeight);
+    Window window("test");
+    window.Initialise(3, 3);
     window.setContext();
+    window.getFrameBuffureSize(&bufferWidth, &bufferHeight);
+    Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
-    //allow moder extension features
-    glewExperimental = GL_TRUE;
-
-    //initializing glew
-    if(glewInit() != GLEW_OK){
-        printf("glew initialisation failed!");
-        window.~Window();
-        glfwTerminate();
-        return 1;
-    }
-
-    glEnable(GL_DEPTH_TEST);
-    //setup Viewport size
-    glViewport(0, 0, bufferWidth, bufferHeight);
-    
     float vertices[] = {
         -1.0f, -1.0f, 0.0f,
         0.0f, -1.0f, 1.0f,
@@ -49,8 +33,6 @@ int main(){
         2, 3, 0,
         0, 1, 2
     };
-
-    glm::mat4 proj = glm::perspective(45.0f, (GLfloat)bufferWidth/bufferHeight, 0.1f, 100.0f);
         
     VertexArray va;
     IndexBuffer ib(indices, 12);
@@ -60,39 +42,38 @@ int main(){
     va.AddBuffer(vb, layout);
     
     Shader shader(srcPath);
-    shader.Bind();
-    shader.SetUniformMat4f("proj", proj);
     
     shader.UnBind();
     ib.Unbind();
     va.Unbind();
 
     Renderer render;
-
+    
     //Loop until window closed
     while (!window.shouldClose()){
-        //Get + Handle user input events
+        float now = glfwGetTime();
+        deltaTime = now - lastTime;
+        lastTime = now;
+
         window.pollEvents();
-
-        if(direction)
-        triOffset += triIncrement;
-        else
-        triOffset -= triIncrement;
         
-        if(abs(triOffset) >= triMaxOffset)
-        direction = !direction;
-
-        //clear window
+        camera.keyControl(window.getkeys(), deltaTime);
+        MouseChange change = window.getMouseChange();
+        camera.mouseControl(change.x, change.y);
+        
         render.Clear();
 
         shader.Bind();
+        shader.SetUniformMat4f("proj", window.getProjection()); 
 
         glm::mat4 model;
-        model = glm::translate(model, glm::vec3(0.0f, triOffset, -2.5f));
-        // model = glm::rotate(model, triOffset * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+        // model = glm::rotate(model, x * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+        // model = glm::rotate(model, y * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
         shader.SetUniformMat4f("model", model);
+        shader.SetUniformMat4f("view", camera.calculateViewMatrix());
         
         va.Bind();
         ib.Bind();

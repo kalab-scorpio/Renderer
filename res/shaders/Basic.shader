@@ -4,10 +4,11 @@
 layout (location = 0) in vec4 pos;
 uniform mat4 model;
 uniform mat4 proj;
+uniform mat4 view;
 out vec4 vColor;
 
 void main(){
-    gl_Position = proj * model * pos;
+    gl_Position = proj * view * model * pos;
     vColor = clamp(pos, 0.0f, 1.0f);
 }
 
