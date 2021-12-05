@@ -105,7 +105,6 @@ void Window::handleResize(GLFWwindow* window, int width, int height){
 void Window::handleScroll(GLFWwindow* window, double xoffset, double yoffset){
     Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
     theWindow->scroll += yoffset;
-    std::cout<<theWindow->scroll<<std::endl;
 }
 
 float Window::getMouseScroll(){

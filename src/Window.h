@@ -19,7 +19,7 @@ private:
     const char* title;
     bool keys[1024];
     int bufferWidth, bufferHeight;
-    float lastx=0, lasty=0, xChange=0, yChange=0, scroll=0, lastScroll=0, scrollChange=0;
+    float lastx=0, lasty=0, xChange=0, yChange=0, scroll=0, lastScroll=0;
     bool firstMoved = true;
     static void handlekeys(GLFWwindow* window, int key,int code, int action, int mode);
     static void handleMouse(GLFWwindow* window, double xPos, double yPos);
