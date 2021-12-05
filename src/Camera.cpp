@@ -28,9 +28,8 @@ void Camera::mouseControl(float xChange, float yChange){
     yChange *= turnSpeed;
 
     yaw += xChange;
-
     pitch += yChange;
-    // pitch = (pitch > 89.0f? 89.0f : pitch) || (pitch < -89.0f? 0.0f : pitch);
+   
     if(pitch> 89.0f)
         pitch = 89.0f;
     if(pitch < -89.0f)
