@@ -27,6 +27,21 @@ int main(){
         1.0f, -1.0f, 0.0f,
         0.0f, 1.0f, 0.0f
     };
+    float rawVertices[] = {
+        -1.0f, -1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, -1.0f, 1.0f,
+        0.0f, -1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+        0.0f, -1.0f, 1.0f,
+        1.0f, -1.0f, 0.0f
+    };
+
     unsigned int indices[]={
         0, 3, 1,
         1, 3, 2,
@@ -36,7 +51,7 @@ int main(){
         
     VertexArray va;
     IndexBuffer ib(indices, 12);
-    VertexBuffer vb(vertices, sizeof(vertices));
+    VertexBuffer vb(vertices, sizeof(rawVertices));
     VertexBufferLayout layout;
     layout.Push<float>(3);
     va.AddBuffer(vb, layout);
@@ -65,21 +80,19 @@ int main(){
 
         shader.Bind();
         shader.SetUniformMat4f("proj", window.getProjection()); 
-        
-        for(int i = 0; i < 2; i++){
-            glm::mat4 model;
-            model = glm::translate(model, glm::vec3(0.0f, i, -2.5f));
-            // model = glm::rotate(model, x * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-            // model = glm::rotate(model, y * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::scale(model, glm::vec3(0.4f, i*0.4f, 1.0f));
 
-            shader.SetUniformMat4f("model", model);
-            shader.SetUniformMat4f("view", camera.calculateViewMatrix());
-            
-            va.Bind();
-            ib.Bind();
-            render.Draw(va, ib, shader);
-        }
+        glm::mat4 model;
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+        // model = glm::rotate(model, x * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+        // model = glm::rotate(model, y * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+
+        shader.SetUniformMat4f("model", model);
+        shader.SetUniformMat4f("view", camera.calculateViewMatrix());
+        
+        va.Bind();
+        ib.Bind();
+        render.Draw(va, ib, shader, 20);
         ib.Unbind();
         va.Unbind();
 

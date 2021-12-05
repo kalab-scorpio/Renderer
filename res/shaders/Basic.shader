@@ -5,11 +5,27 @@ layout (location = 0) in vec4 pos;
 uniform mat4 model;
 uniform mat4 proj;
 uniform mat4 view;
+
 out vec4 vColor;
 
+mat4 buildTranslate(float x, float y, float z);
+
 void main(){
-    gl_Position = proj * view * model * pos;
+    float i = gl_InstanceID;
+    float x = sin(35.0f*i)*8.0f;
+    float y = cos(52.0f*i)*8.0f;
+    float z = sin(70.0f*i)*8.0f;
+    mat4 trans = model * buildTranslate(x, y, z);
+    gl_Position = proj * view * trans * pos;
     vColor = clamp(pos, 0.0f, 1.0f);
+}
+
+mat4 buildTranslate(float x, float y, float z){
+    mat4 trans = mat4(1.0, 0.0, 0.0, 0.0,
+                      0.0, 1.0, 0.0, 0.0,
+                      0.0, 0.0, 1.0, 0.0,
+                      x  , y  , z  , 1.0);
+    return trans;
 }
 
 #shader fragment
