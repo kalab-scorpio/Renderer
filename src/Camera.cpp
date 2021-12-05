@@ -26,7 +26,7 @@ void Camera::update(){
 void Camera::mouseControl(float xChange, float yChange){
     xChange *= turnSpeed;
     yChange *= turnSpeed;
-
+    
     yaw += xChange;
     pitch += yChange;
    

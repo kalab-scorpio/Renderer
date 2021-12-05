@@ -7,8 +7,8 @@
 #include "vendor/glm/gtc/matrix_transform.hpp"
 
 struct MouseChange{
-    float x;
-    float y;
+    float x = 0;
+    float y = 0;
 };
 
 class Window {

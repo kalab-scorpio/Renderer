@@ -79,9 +79,10 @@ void Window::handleMouse(GLFWwindow* window, double xPos, double yPos){
             theWindow->lasty = yPos;
             theWindow->firstMoved = false;
         }
+        
         theWindow->xChange = xPos - theWindow->lastx;
         theWindow->yChange = yPos - theWindow->lasty;
-
+        
         theWindow->lastx = xPos;
         theWindow->lasty = yPos;
     }
@@ -101,7 +102,9 @@ void Window::handleResize(GLFWwindow* window, int width, int height){
 }
 
 MouseChange Window::getMouseChange(){
-    MouseChange change = {this->xChange, this->yChange};
+    MouseChange change;
+    if(abs(xChange) < 100000 && abs(yChange) < 100000 )
+        change = {xChange, yChange};
     this->xChange=0;
     this->yChange=0;
     return change;
