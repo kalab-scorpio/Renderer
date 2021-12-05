@@ -62,7 +62,7 @@ void Window::handlekeys(GLFWwindow* window, int key,int code, int action, int mo
     Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetInputMode(window,GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetWindowShouldClose(window, true);
     if(key > 0 && key < 1024){
         if(action == GLFW_PRESS)
             theWindow->keys[key] = true;
@@ -82,15 +82,16 @@ void Window::handleMouse(GLFWwindow* window, double xPos, double yPos){
         
         theWindow->xChange = xPos - theWindow->lastx;
         theWindow->yChange = yPos - theWindow->lasty;
-        
-        theWindow->lastx = xPos;
-        theWindow->lasty = yPos;
     }
+    theWindow->lastx = xPos;
+    theWindow->lasty = yPos;
 }
 
 void Window::handleMouseButton(GLFWwindow* window, int button, int action, int mode){
-     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
         glfwSetInputMode(window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Window::handleResize(GLFWwindow* window, int width, int height){
@@ -99,6 +100,18 @@ void Window::handleResize(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
     float ratio = (float)width/(float)height;
     theWindow->proj = glm::perspective(45.0f, ratio, 0.1f, 100.0f);
+}
+
+void Window::handleScroll(GLFWwindow* window, double xoffset, double yoffset){
+    Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    theWindow->scroll += yoffset;
+}
+
+float Window::getMouseScroll(){
+    if(lastScroll == scroll)
+        scroll = 0;
+    lastScroll = scroll;
+    return scroll;
 }
 
 MouseChange Window::getMouseChange(){
@@ -114,6 +127,7 @@ void Window::createCallbacks(){
     glfwSetKeyCallback(mainWindow, handlekeys);
     glfwSetCursorPosCallback(mainWindow, handleMouse);
     glfwSetMouseButtonCallback(mainWindow, handleMouseButton);
+    glfwSetScrollCallback(mainWindow, handleScroll);
     glfwSetWindowSizeCallback(mainWindow, handleResize);
 }
 
