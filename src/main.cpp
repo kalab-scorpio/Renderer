@@ -24,28 +24,31 @@ int main(){
     Texture wood("res/Textures/IMG_20211205_191816.jpg");
     Texture road("res/Textures/IMG_20211205_191419.jpg"); 
 
-    float vertices[] = {
+    float pyramidVertices[] = {
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, -1.0f, 1.0f,  0.5f, 0.0f,
         1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
         0.0f, 1.0f, 0.0f,   0.5f, 1.0f 
     };
-    float rawVertices[] = {
+
+    float cubeVertices[] = {
         -1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, -1.0f, 1.0f,
-        0.0f, -1.0f, 1.0f,
-        0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
         1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f,
-        0.0f, -1.0f, 1.0f,
-        1.0f, -1.0f, 0.0f
+        1.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f, -1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f
     };
 
-    unsigned int indices[]={
+    unsigned int cubeIndices[]={
+        0, 1, 2,
+        1, 2, 3,
+
+    };
+
+    unsigned int pyramidIndices[]={
         0, 3, 1,
         1, 3, 2,
         2, 3, 0,
@@ -53,17 +56,19 @@ int main(){
     };
         
     VertexArray va;
-    IndexBuffer ib(indices, 12);
-    VertexBuffer vb(vertices, sizeof(rawVertices));
+    IndexBuffer pyramidIb(pyramidIndices, 12);
+    IndexBuffer cubeIb(cubeIndices, 6);
+    VertexBuffer pyramidVb(pyramidVertices, sizeof(pyramidVertices));
+    VertexBuffer cubeVb(cubeVertices, sizeof(cubeVertices));
     VertexBufferLayout layout;
     layout.Push<float>(3);
     layout.Push<float>(2);
-    va.AddBuffer(vb, layout);
+    va.AddBuffer(pyramidVb, layout);
     
     Shader shader(srcPath);
     
     shader.UnBind();
-    ib.Unbind();
+    pyramidIb.Unbind();
     va.Unbind();
 
     Renderer render;
@@ -81,7 +86,7 @@ int main(){
         
         camera.mouseControl(change.x, change.y);
         
-        render.Clear();
+        render.Clear(0.5f, 0.5f, 0.5f, 1.0f);
 
         shader.Bind();
         shader.SetUniformMat4f("proj", window.getProjection()); 
@@ -96,12 +101,18 @@ int main(){
         shader.SetUniformMat4f("view", camera.calculateViewMatrix());
         
         va.Bind();
-        ib.Bind();
-        
+        pyramidIb.Bind();
         wood.Bind();
-        render.Draw(va, ib, shader, 1000000);
+        render.Draw(va, pyramidIb, shader, 1);
+        pyramidIb.Unbind();
+        VertexBufferLayout cubeLayout;
+        cubeLayout.Push<float>(3);
+        va.AddBuffer(cubeVb, cubeLayout);
+        cubeIb.Bind();
+        
+        render.Draw(va, cubeIb, shader, 1);
         wood.UnBind();
-        ib.Unbind();
+        cubeIb.Unbind();
         va.Unbind();
 
         shader.UnBind();
